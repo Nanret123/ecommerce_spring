@@ -4,16 +4,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import com.example.ecom.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // This class implements UserDetails interface to provide user details for authentication
 public class UserDetailsImpl implements UserDetails {
 
-  private Long id;
+  private UUID id;
   private String username;
   private String email;
 
@@ -22,7 +25,7 @@ public class UserDetailsImpl implements UserDetails {
 
   private Collection<? extends GrantedAuthority> authorities;
 
-  public UserDetailsImpl(Long id, String username, String email, String password,
+  public UserDetailsImpl(UUID id, String username, String email, String password,
       Collection<? extends GrantedAuthority> authorities) {
     this.id = id;
     this.username = username;
@@ -47,7 +50,7 @@ public class UserDetailsImpl implements UserDetails {
     return authorities;
   }
 
-  public Long getId() {
+  public UUID getId() {
     return id;
 }
 

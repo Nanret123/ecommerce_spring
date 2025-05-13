@@ -20,7 +20,10 @@ import com.example.ecom.repository.RoleRepository;
 import com.example.ecom.repository.UserRepository;
 import com.example.ecom.security.jwt.JwtUtils;
 import com.example.ecom.security.services.UserDetailsImpl;
+import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class AuthService {
   private final AuthenticationManager authenticationManager;
@@ -66,7 +69,7 @@ public class AuthService {
     user.setPassword(encoder.encode(signUpRequest.getPassword()));
 
     String roleStr = signUpRequest.getRole();
-    ERole enumRole = ERole.ROLE_USER; // default
+    ERole enumRole = ERole.USER; // default
 
     if (roleStr != null && !roleStr.isEmpty()) {
       try {
@@ -125,9 +128,9 @@ public class AuthService {
   //logout
  public void logoutUser() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = userDetails.getId();
+        UUID userId = userDetails.getId();
         refreshTokenService.deleteByUserId(userId);
-        
+        return;
     }
 
 }

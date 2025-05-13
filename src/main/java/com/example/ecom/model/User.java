@@ -1,6 +1,7 @@
 package com.example.ecom.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +36,7 @@ uniqueConstraints = {
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private UUID id;
 
   @NotBlank
   @Column(name = "first_name", nullable = false)
@@ -65,7 +66,7 @@ public class User {
 @Column(name = "image_url")
 private String imageUrl;
 
-@Column(name = "last_seen", nullable = false)
+@Column(name = "last_seen")
 private LocalDateTime lastSeen;
 
 @Column(name = "address_city")

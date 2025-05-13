@@ -1,5 +1,7 @@
 package com.example.ecom.auth.dto;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +13,12 @@ public class JwtResponseDto {
   private String token;
   private String refreshToken;
   private String type = "Bearer";
-  private Long id;
+  private UUID id;
   private String username;
   private String email;
   private String role;
 
-  public JwtResponseDto(String token, String refreshToken, Long id, String username, String email, String role) {
+  public JwtResponseDto(String token, String refreshToken, UUID id, String username, String email, String role) {
     this.token = token;
     this.refreshToken = refreshToken;
     this.id = id;

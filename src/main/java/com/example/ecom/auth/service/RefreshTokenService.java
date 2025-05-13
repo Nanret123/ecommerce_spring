@@ -37,7 +37,7 @@ public class RefreshTokenService {
     return refreshTokenRepo.findByToken(token);
   }
 
-  public RefreshToken createRefreshToken(Long userId) {
+  public RefreshToken createRefreshToken(UUID userId) {
     RefreshToken refreshToken = new RefreshToken();
     // find user
     User user = userRepo.findById(userId)
@@ -63,7 +63,7 @@ public class RefreshTokenService {
   }
 
   @Transactional
-  public void deleteByUserId(Long userId) {
+  public void deleteByUserId(UUID userId) {
     User user = userRepo.findById(userId)
         .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
     refreshTokenRepo.deleteByUser(user);
@@ -75,7 +75,7 @@ public class RefreshTokenService {
         .map(RefreshToken::getUser)
         .map(user -> {
           String newToken = jwtUtils.generateTokenFromUsername(user.getUsername());
-          return new RefreshTokenResponse(newToken, token);
+          return new RefreshTokenResponse(token, newToken);
         })
         .orElseThrow(() ->  new RefreshTokenException(token, "Refresh token is invalid or expired"));
   }
