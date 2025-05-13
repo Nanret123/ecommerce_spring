@@ -5,4 +5,6 @@ databaseChangeLog:
       file: "db/changelog/user-table.yml"
   - include:
       file: "db/changelog/refresh-tokens.yml" 
+  - include:
+      file: "db/changelog/add-last-seen.yml"
  

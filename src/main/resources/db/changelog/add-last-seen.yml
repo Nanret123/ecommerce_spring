@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: "002-add-last-seen-to-users"
+      author: "ecommerce"
+      changes:
+        - addColumn:
+            tableName: "users"
+            columns:
+              - column:
+                  name: "last_seen"
+                  type: "timestamp"
+                  constraints:
+                    nullable: true
