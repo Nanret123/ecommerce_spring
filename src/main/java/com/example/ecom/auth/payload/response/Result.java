@@ -14,7 +14,7 @@ public class Result {
     @Schema(description = "Indicates if the operation was successful", example = "true")
     private boolean success;
     
-    @Schema(description = "Response message", example = "User registered successfully")
+    @Schema(description = "Response message")
     private String message;
     
     @Schema(description = "Response payload data (can be null)")
