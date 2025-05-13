@@ -21,9 +21,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @Tag(name = "Auth", description = "Authentication related APIs")
@@ -96,7 +99,8 @@ public class AuthController {
 
   @Operation(
     summary = "Sign out user",
-    description = "Logs out the currently authenticated user"
+    description = "Logs out the currently authenticated user",
+    security = @SecurityRequirement(name = "apiBearerAuth")
     )
     @ApiResponses(value = {
       @ApiResponse(
@@ -109,6 +113,6 @@ public class AuthController {
   @PostMapping("/signout")
   public Result sigout(){
      authService.logoutUser();
-    return ResponseUtil.success("Log out successful", null);
+    return ResponseUtil.success("User logged out successfully", null);
   }
 }
