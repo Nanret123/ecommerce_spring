@@ -80,6 +80,7 @@ public class WebSecurityConfig {
                     "/api/auth/**",
                     "/api/public/**"
                 ).permitAll()
+                .requestMatchers("/api/auth/logout").authenticated()
                 .anyRequest().authenticated()
         );
     
