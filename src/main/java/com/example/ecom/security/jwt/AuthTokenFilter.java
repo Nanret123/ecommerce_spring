@@ -23,10 +23,10 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-  private final JwtUtils jwtUtils;
+  private final JwtService jwtUtils;
   private UserDetailsServiceImpl userDetailsService;
 
-  public AuthTokenFilter(JwtUtils jwtUtils, UserDetailsServiceImpl userDetailsService) {
+  public AuthTokenFilter(JwtService jwtUtils, UserDetailsServiceImpl userDetailsService) {
     this.userDetailsService = userDetailsService;
     this.jwtUtils = jwtUtils;
   }
