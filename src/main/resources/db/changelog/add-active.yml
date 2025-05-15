@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: "001-add-active-field-to-users"
+      author: "ecommerce"
+      changes:
+        - addColumn:
+            tableName: "users"
+            columns:
+              - column:
+                  name: "active"
+                  type: "boolean"
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+                    
