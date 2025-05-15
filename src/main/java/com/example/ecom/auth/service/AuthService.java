@@ -1,6 +1,8 @@
 package com.example.ecom.auth.service;
 
 
+import java.util.UUID;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,9 +20,9 @@ import com.example.ecom.model.Role;
 import com.example.ecom.model.User;
 import com.example.ecom.repository.RoleRepository;
 import com.example.ecom.repository.UserRepository;
-import com.example.ecom.security.jwt.JwtUtils;
+import com.example.ecom.security.jwt.JwtService;
 import com.example.ecom.security.services.UserDetailsImpl;
-import java.util.UUID;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,7 +32,7 @@ public class AuthService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder encoder;
-  private final JwtUtils jwtUtils;
+  private final JwtService jwtUtils;
   private final RefreshTokenService refreshTokenService;
 
   public AuthService(
@@ -38,7 +40,7 @@ public class AuthService {
       UserRepository userRepository,
       RoleRepository roleRepository,
       PasswordEncoder encoder,
-      JwtUtils jwtUtils,
+      JwtService jwtUtils,
       RefreshTokenService refreshTokenService) {
     this.authenticationManager = authenticationManager;
     this.userRepository = userRepository;
@@ -92,7 +94,11 @@ public class AuthService {
         savedUser.getFirstName(),
         savedUser.getLastName(),
         savedUser.getEmail(),
-        savedUser.getRole().getName().name());
+        savedUser.getRole().getName().name(),
+        savedUser.getActive(),
+        savedUser.getCreatedAt(),
+        savedUser.getUpdatedAt()
+        );
 
   }
 
@@ -130,7 +136,6 @@ public class AuthService {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID userId = userDetails.getId();
         refreshTokenService.deleteByUserId(userId);
-        return;
     }
 
 }

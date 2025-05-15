@@ -13,7 +13,7 @@ import com.example.ecom.model.RefreshToken;
 import com.example.ecom.model.User;
 import com.example.ecom.repository.RefreshTokenRepository;
 import com.example.ecom.repository.UserRepository;
-import com.example.ecom.security.jwt.JwtUtils;
+import com.example.ecom.security.jwt.JwtService;
 
 import jakarta.transaction.Transactional;
 
@@ -24,10 +24,10 @@ public class RefreshTokenService {
 
   private final RefreshTokenRepository refreshTokenRepo;
   private final UserRepository userRepo;
-  private final JwtUtils jwtUtils;
+  private final JwtService jwtUtils;
 
   public RefreshTokenService(RefreshTokenRepository refreshTokenRepo,
-                             UserRepository userRepo, JwtUtils jwtUtils) {
+                             UserRepository userRepo, JwtService jwtUtils) {
     this.refreshTokenRepo = refreshTokenRepo;
     this.userRepo = userRepo;
     this.jwtUtils = jwtUtils;

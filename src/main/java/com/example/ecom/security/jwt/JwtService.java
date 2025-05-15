@@ -21,7 +21,7 @@ import io.jsonwebtoken.security.Keys;
 
 //this class is responsible for generating, parsing, and validating JWTs (JSON Web Tokens)
 @Service
-public class JwtUtils { 
+public class JwtService { 
 
   @Value("${security.jwt.secret}")
   private String jwtSecret;
@@ -30,7 +30,7 @@ public class JwtUtils {
   private int jwtExpirationMs;
 
 
-  private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+  private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
   //generates jwt string after login
   public String generateJwtToken(Authentication authentication) {
