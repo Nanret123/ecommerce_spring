@@ -28,4 +28,7 @@ public class UserUpdateDTO{
 
   @Schema(description = "User's active status(admin only)", example = "true")
   private Boolean active;
+
+  @Schema(description = "User's password", example = "password123")
+  private String password;
 }
