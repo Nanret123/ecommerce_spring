@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,24 +18,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.example.ecom.security.jwt.AuthTokenFilter;
 import com.example.ecom.security.services.UserDetailsServiceImpl;
 
+import lombok.RequiredArgsConstructor;
+
 //Connects everything together. Sets security rules, providers, and filters.
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
   private final AuthenticationEntryPoint unauthorizedHandler;
   private final UserDetailsServiceImpl userDetailsService;
-  private final AuthTokenFilter authTokenFilter;
+  //private final AuthTokenFilter authTokenFilter;
 
-  public WebSecurityConfig(
-      AuthenticationEntryPoint unauthorizedHandler,
-      UserDetailsServiceImpl userDetailsService,
-      AuthTokenFilter authTokenFilter) {
-    this.unauthorizedHandler = unauthorizedHandler;
-    this.userDetailsService = userDetailsService;
-    this.authTokenFilter = authTokenFilter;
-  }
-
+  
   @Bean
   public DaoAuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -68,10 +65,6 @@ public class WebSecurityConfig {
                                                                                                       // sessions at all
                                                                                                       // - ideal for JWT
                                                                                                       // authentication
-        // .authorizeHttpRequests(request -> request.requestMatchers("/api/auth/**").permitAll()
-        //     .requestMatchers("/api/test/**").permitAll()
-        //     .anyRequest().authenticated() // all other requests need authentication
-        // );
         .authorizeHttpRequests(auth -> auth
         .requestMatchers(
                     "/v3/api-docs/**",

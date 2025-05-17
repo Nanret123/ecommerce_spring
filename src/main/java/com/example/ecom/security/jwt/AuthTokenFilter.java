@@ -2,8 +2,6 @@ package com.example.ecom.security.jwt;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,20 +16,19 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
 
   private final JwtService jwtUtils;
-  private UserDetailsServiceImpl userDetailsService;
+  private final UserDetailsServiceImpl userDetailsService;
 
-  public AuthTokenFilter(JwtService jwtUtils, UserDetailsServiceImpl userDetailsService) {
-    this.userDetailsService = userDetailsService;
-    this.jwtUtils = jwtUtils;
-  }
-
-  private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+  
 
   // JWT validation happens on every request that passes through the filter.
   // Checks if there's a token in the Authorization header
@@ -42,6 +39,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     try {
       String jwt = parseJwt(request);
+
       if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
         String username = jwtUtils.getUserNameFromToken(jwt);
 
@@ -60,7 +58,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     } catch (Exception e) {
-      logger.error("Cannot set user authentication: {}", e);
+      log.debug("Cannot set user authentication: {}", e);
     }
 
     // pass it to the next filter or controller

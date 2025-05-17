@@ -10,7 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.ecom.model.User;
 import com.example.ecom.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 // this class connects your Spring Security authentication system with your database. It fetches the user from the db and hands it to spring
+@Slf4j
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
   @Autowired
