@@ -76,6 +76,12 @@ private String addressCity;
 @Column(name = "address_country")
 private String addressCountry;
 
+@Column(name = "reset_password_token")
+private String resetPasswordToken;
+
+@Column(name = "reset_password_expiry")
+private LocalDateTime resetPasswordExpiry;
+
   @Column(name="created_at")
   private LocalDateTime createdAt;
 

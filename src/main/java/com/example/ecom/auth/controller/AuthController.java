@@ -9,7 +9,9 @@ import com.example.ecom.auth.dto.JwtResponseDto;
 import com.example.ecom.auth.dto.RefreshTokenRequest;
 import com.example.ecom.auth.dto.RefreshTokenResponse;
 import com.example.ecom.auth.dto.UserDto;
+import com.example.ecom.auth.payload.request.ForgotPasswordDTO;
 import com.example.ecom.auth.payload.request.LoginRequest;
+import com.example.ecom.auth.payload.request.ResetPasswordDTO;
 import com.example.ecom.auth.payload.request.SignUpRequest;
 import com.example.ecom.auth.payload.response.Result;
 import com.example.ecom.auth.service.AuthService;
@@ -115,4 +117,26 @@ public class AuthController {
      authService.logoutUser();
     return ResponseUtil.success("User logged out successfully", null);
   }
+
+  @PostMapping("/forgot-password")
+  @Operation(
+    summary = "Forgot password",
+    description = "Sends a password reset token to the user's email"
+    )
+  public Result forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+    authService.forgotPassword(forgotPasswordDTO);
+    return ResponseUtil.success("Password reset token sent successfully", null);
+  }
+
+  @PostMapping("/reset-password")
+  @Operation(
+    summary = "Reset password",
+    description = "Resets the user's password using the provided token"
+    )
+  public Result resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO) {
+    authService.resetPassword(resetPasswordDTO);
+    return ResponseUtil.success("Password reset successfully", null);
+  }
+  
+  
 }

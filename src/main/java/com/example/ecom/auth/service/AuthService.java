@@ -1,6 +1,6 @@
 package com.example.ecom.auth.service;
 
-
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,10 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ecom.auth.dto.JwtResponseDto;
 import com.example.ecom.auth.dto.UserDto;
+import com.example.ecom.auth.payload.request.ForgotPasswordDTO;
 import com.example.ecom.auth.payload.request.LoginRequest;
+import com.example.ecom.auth.payload.request.ResetPasswordDTO;
 import com.example.ecom.auth.payload.request.SignUpRequest;
 import com.example.ecom.model.ERole;
 import com.example.ecom.model.RefreshToken;
@@ -23,10 +26,12 @@ import com.example.ecom.repository.UserRepository;
 import com.example.ecom.security.jwt.JwtService;
 import com.example.ecom.security.services.UserDetailsImpl;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class AuthService {
   private final AuthenticationManager authenticationManager;
   private final UserRepository userRepository;
@@ -35,29 +40,14 @@ public class AuthService {
   private final JwtService jwtUtils;
   private final RefreshTokenService refreshTokenService;
 
-  public AuthService(
-      AuthenticationManager authenticationManager,
-      UserRepository userRepository,
-      RoleRepository roleRepository,
-      PasswordEncoder encoder,
-      JwtService jwtUtils,
-      RefreshTokenService refreshTokenService) {
-    this.authenticationManager = authenticationManager;
-    this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
-    this.encoder = encoder;
-    this.jwtUtils = jwtUtils;
-    this.refreshTokenService = refreshTokenService;
-  }
-
   // sign up method
   public UserDto registerUser(SignUpRequest signUpRequest) {
-     // Normalize and trim input
-     String username = signUpRequest.getUsername().trim();
-     String email = signUpRequest.getEmail().toLowerCase().trim();
+    // Normalize and trim input
+    String username = signUpRequest.getUsername().trim();
+    String email = signUpRequest.getEmail().toLowerCase().trim();
 
     if (userRepository.existsByUsername(username)) {
-       throw new IllegalArgumentException("Username is already taken");
+      throw new IllegalArgumentException("Username is already taken");
     }
     if (userRepository.existsByEmail(email)) {
       throw new IllegalArgumentException("Email is already in use");
@@ -75,11 +65,11 @@ public class AuthService {
 
     if (roleStr != null && !roleStr.isEmpty()) {
       try {
-          enumRole = ERole.valueOf(roleStr.toUpperCase());
+        enumRole = ERole.valueOf(roleStr.toUpperCase());
       } catch (IllegalArgumentException e) {
-          throw new IllegalArgumentException("Invalid role: " + roleStr);
+        throw new IllegalArgumentException("Invalid role: " + roleStr);
       }
-  }
+    }
 
     // fetch role from the db
     Role role = roleRepository.findByName(enumRole)
@@ -97,12 +87,12 @@ public class AuthService {
         savedUser.getRole().getName().name(),
         savedUser.getActive(),
         savedUser.getCreatedAt(),
-        savedUser.getUpdatedAt()
-        );
+        savedUser.getUpdatedAt());
 
   }
 
   // login method
+  @Transactional
   public JwtResponseDto authenticateUser(LoginRequest loginRequest) {
     Authentication authentication = authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -121,21 +111,55 @@ public class AuthService {
 
     RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
+    userRepository.findById(userDetails.getId()).ifPresent(user -> {
+      user.setLastSeen(LocalDateTime.now());
+      userRepository.save(user);
+    });
+
     return new JwtResponseDto(
         jwt,
         refreshToken.getToken(),
         userDetails.getId(),
         userDetails.getUsername(),
         userDetails.getEmail(),
-        role     
-    );
+        role);
   }
 
-  //logout
- public void logoutUser() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UUID userId = userDetails.getId();
-        refreshTokenService.deleteByUserId(userId);
-    }
+  // logout
+  public void logoutUser() {
+    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+        .getPrincipal();
+    UUID userId = userDetails.getId();
+    refreshTokenService.deleteByUserId(userId);
+  }
+
+  public void forgotPassword(ForgotPasswordDTO forgotPasswordDTO) {
+        String email = forgotPasswordDTO.getEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+                user.setResetPasswordToken(UUID.randomUUID().toString());
+                user.setResetPasswordExpiry(LocalDateTime.now().plusHours(1));
+                userRepository.save(user);
+
+                //send token to user email
+  }
+
+  @Transactional
+  public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
+        User user = userRepository.findByResetPasswordToken(resetPasswordDTO.getToken())
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
+
+        if (user.getResetPasswordExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Token expired");
+        }
+
+        user.setPassword(encoder.encode(resetPasswordDTO.getPassword()));
+        user.setResetPasswordToken(null);
+        user.setResetPasswordExpiry(null);
+        userRepository.save(user);
+  }
 
 }
+
+

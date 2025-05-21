@@ -12,6 +12,7 @@ import com.example.ecom.model.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
   Optional<User> findByUsername(String username);
   Optional<User> findByEmail(String email);
+  Optional<User> findByResetPasswordToken(String token);
   Boolean  existsByUsername(String username);
   Boolean existsByEmail(String email);
   
