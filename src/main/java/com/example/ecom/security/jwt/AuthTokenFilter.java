@@ -37,6 +37,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+        if (path.startsWith("/api/public/") || path.startsWith("/api/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
     try {
       String jwt = parseJwt(request);
 
@@ -60,6 +67,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     } catch (Exception e) {
       log.debug("Cannot set user authentication: {}", e);
     }
+
+    
 
     // pass it to the next filter or controller
     filterChain.doFilter(request, response);
