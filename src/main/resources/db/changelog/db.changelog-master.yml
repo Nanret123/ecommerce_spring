@@ -6,5 +6,11 @@ databaseChangeLog:
   - include:
       file: "db/changelog/refresh-tokens.yml" 
   - include:
-      file: "db/changelog/add-last-seen.yml"
- 
+      file: "db/changelog/add-last-seen.yml"  
+  - include:
+      file: "db/changelog/add-active.yml"
+  - include:
+        file: "db/changelog/add-reset-password-token.yml"
+  - include:
+        file: "db/changelog/product-table.yml"
+  
