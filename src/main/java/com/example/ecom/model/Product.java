@@ -16,7 +16,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -95,4 +94,7 @@ public class Product {
   protected void onUpdate() {
     updatedAt = LocalDateTime.now();
   }
+
+public void setCategory(Category category) { this.category = category; }
+public Category getCategory() { return category; }
 }

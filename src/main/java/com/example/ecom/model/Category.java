@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -46,6 +48,7 @@ public class Category {
 
   @OneToMany(mappedBy = "category", cascade =  { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
   @Schema(description = "Products in this category")
+  @JsonIgnore
   private List<Product> products = new ArrayList<>();
 
   @Schema(description = "When the category was created")

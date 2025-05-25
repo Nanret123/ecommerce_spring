@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.ecom.model.Category;
 import com.example.ecom.model.Product;
 import com.example.ecom.product.dto.CreateProductDto;
 import com.example.ecom.product.dto.ProductFilterDto;
@@ -61,11 +62,15 @@ public class ProductService implements IProduct {
 
   @Override
   public ProductResponseDto createProduct(CreateProductDto product) {
-    // check if categoryid exists
-    categoryRepo.findById(product.getCategoryId())
-        .orElseThrow(() -> new RuntimeException("Category Not Found"));
 
-    Product productEntity = productMapper.toEntity(product);
+     Product productEntity = productMapper.toEntity(product);
+    // check if categoryid exists
+    if (product.getCategoryId() != null) {
+      Category category = categoryRepo.findById(product.getCategoryId())
+        .orElseThrow(() -> new RuntimeException("Category Not Found"));
+      productEntity.setCategory(category);
+    }
+   
     Product savedProduct = productRepo.save(productEntity);
     return productMapper.toDto(savedProduct);
   }
