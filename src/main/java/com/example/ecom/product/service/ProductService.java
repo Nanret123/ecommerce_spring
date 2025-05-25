@@ -103,7 +103,7 @@ public class ProductService implements IProduct {
     return new ProductResponseDto(
         product.getId(),
         product.getName(),
-        product.getCategory(),
+        product.getCategory().getName(),
         product.getPrice(),
         product.getDescription(),
         product.getImageUrl(),
@@ -122,7 +122,7 @@ public class ProductService implements IProduct {
     }
 
     if (filterDto.getCategoryId() != null) {
-      spec = spec.and(ProductSpecification.hasCategoryId(filterDto.getCategoryId().toString()));
+      spec = spec.and(ProductSpecification.hasCategoryId(filterDto.getCategoryId()));
     }
 
     if (filterDto.getCategoryName() != null && !filterDto.getCategoryName().trim().isEmpty()) {

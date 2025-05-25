@@ -23,7 +23,7 @@ public class ProductResponseDto {
     private String name;
 
      @Schema(description = "Category information")
-    private Category category;
+    private String categoryName;
 
     @Schema(description = "Price of the Product", example = "199.99")
     private BigDecimal price;
