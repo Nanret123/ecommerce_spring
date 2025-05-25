@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: "001-add-quantity-field-to-products"
+      author: "ecommerce"
+      changes:
+        - addColumn:
+            tableName: "products"
+            columns:
+              - column:
+                  name: quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+                    
