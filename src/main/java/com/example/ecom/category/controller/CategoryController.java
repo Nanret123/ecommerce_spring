@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/public/categories")
 @Validated
 @RequiredArgsConstructor
-@Tag(name = "Category Management", description = "Operations related to categories")
+@Tag(name = "Category", description = "Operations related to categories")
 public class CategoryController {
   
   private final CategoryService service;
