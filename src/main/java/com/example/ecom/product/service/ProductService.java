@@ -88,6 +88,14 @@ public class ProductService implements IProduct {
   }
 
   @Override
+  public ProductResponseDto markAsFeatured(UUID id, boolean featured) {
+    Product product = getProductEntityById(id);
+    product.setIsFeatured(featured);
+    Product new_prod =  productRepo.save(product);
+         return productMapper.toDto(new_prod);
+  }
+
+  @Override
   public void deleteProduct(UUID id) {
     Product productToDelete = getProductEntityById(id);
     productRepo.delete(productToDelete);
@@ -137,6 +145,10 @@ public class ProductService implements IProduct {
 
     if (filterDto.getInStock() != null) {
       spec = spec.and(ProductSpecification.isInStock(filterDto.getInStock()));
+    }
+
+    if (filterDto.getIsFeatured() != null) {
+      spec = spec.and(ProductSpecification.isFeatured(filterDto.getIsFeatured()));
     }
 
     return spec;

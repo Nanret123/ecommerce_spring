@@ -22,9 +22,7 @@ public interface IProduct {
 
   void deleteProduct(UUID id);
 
- Product getProductEntityById(UUID id);
+  Product getProductEntityById(UUID id);
 
-//  List<ProductDto> findProductsByCategory(String category);
-
-//  List<ProductDto> searchProductsByName(String keyword);
+  ProductResponseDto markAsFeatured(UUID id, boolean featured);
 }
