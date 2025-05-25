@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: "001-update-product-table"
+      author: "ecommerce"
+      changes:
+        - addUniqueConstraint:
+            tableName: "products"
+            columnNames: "name"
+            constraintName: "uq_products_name"
+        - addNotNullConstraint:
+            tableName: "products"
+            columnName: "image_url"
+            columnDataType: VARCHAR(512)
+        - modifyDataType:
+            tableName: "products"
+            columnName: "price"
+            newDataType: DECIMAL(10, 2)
+        - addColumn:
+            tableName: "products"
+            columns:
+              - column:
+                  name: "sku"
+                  type: VARCHAR(50)
+                  constraints:
+                    unique: true
+              - column:
+                  name: "is_featured"
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: "in_stock"
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+              - column:
+                  name: "category_id"
+                  type: "UUID"
+        - dropColumn:
+            tableName: "products"
+            columns:
+              - column:
+                  name: "category"
+        - addForeignKeyConstraint:
+            baseTableName: "products"
+            baseColumnNames: "category_id"
+            referencedTableName: "categories"
+            referencedColumnNames: "id"
+            constraintName: "fk_products_category"

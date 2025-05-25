@@ -13,4 +13,9 @@ databaseChangeLog:
         file: "db/changelog/add-reset-password-token.yml"
   - include:
         file: "db/changelog/product-table.yml"
-  
+  - include:
+        file: "db/changelog/create-category-table.yml"
+  - include:
+        file: "db/changelog/update-product-table.yml"
+  - include:
+        file: "db/changelog/remove-unique-constraint-product.yml"

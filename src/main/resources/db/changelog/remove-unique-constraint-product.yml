@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: "002-remove-unique-name-from-products"
+      author: "ecommerce"
+      changes:
+        - dropUniqueConstraint:
+            constraintName: "uq_products_name"
+            tableName: "products"
