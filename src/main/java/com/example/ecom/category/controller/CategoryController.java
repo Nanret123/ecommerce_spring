@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/public/categories")
 @Validated
 @RequiredArgsConstructor
 @Tag(name = "Category Management", description = "Operations related to categories")

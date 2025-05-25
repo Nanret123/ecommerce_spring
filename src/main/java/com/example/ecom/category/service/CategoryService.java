@@ -40,7 +40,7 @@ public class CategoryService {
    */
   public CategoryResponseDto getCategoryById(UUID id) {
     Category category = categoryRepo.findById(id)
-        .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+        .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
     return convertToResponseDTO(category);
   }
 
@@ -50,7 +50,7 @@ public class CategoryService {
   public CategoryResponseDto createCategory(CategoryRequestDTO requestDTO) {
     // Check if category name already exists
     if (categoryRepo.existsByNameIgnoreCase(requestDTO.getName())) {
-      throw new CategoryAlreadyExistsException("Category with name '" + requestDTO.getName() + "' already exists");
+      throw new RuntimeException("Category with name '" + requestDTO.getName() + "' already exists");
     }
     Category category = new Category();
     category.setName(requestDTO.getName());
@@ -65,13 +65,13 @@ public class CategoryService {
    */
   public CategoryResponseDto updateCategory(UUID id, CategoryRequestDTO requestDTO) {
     Category existingCategory = categoryRepo.findById(id)
-        .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+        .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
 
     // Check if the new name conflicts with existing categories (excluding current
     // one)
     if (!existingCategory.getName().equalsIgnoreCase(requestDTO.getName()) &&
         categoryRepo.existsByNameIgnoreCase(requestDTO.getName())) {
-      throw new CategoryAlreadyExistsException("Category with name '" + requestDTO.getName() + "' already exists");
+      throw new RuntimeException("Category with name '" + requestDTO.getName() + "' already exists");
     }
 
     existingCategory.setName(requestDTO.getName());
@@ -86,7 +86,7 @@ public class CategoryService {
    */
   public void deleteCategory(UUID id) {
     Category category = categoryRepo.findById(id)
-        .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+        .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
     categoryRepo.delete(category);
   }
 
@@ -102,19 +102,5 @@ public class CategoryService {
     dto.setUpdatedAt(category.getUpdatedAt() != null ? category.getUpdatedAt().format(dateFormatter) : null);
     return dto;
   }
-}
 
-/**
- * Custom exceptions for category service
- */
-class CategoryNotFoundException extends RuntimeException {
-  public CategoryNotFoundException(String message) {
-    super(message);
-  }
-}
-
-class CategoryAlreadyExistsException extends RuntimeException {
-  public CategoryAlreadyExistsException(String message) {
-    super(message);
-  }
 }
