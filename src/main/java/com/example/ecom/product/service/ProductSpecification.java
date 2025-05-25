@@ -1,5 +1,7 @@
 package com.example.ecom.product.service;
 
+import java.util.UUID;
+
 import org.springframework.data.jpa.domain.Specification;
 
 import com.example.ecom.model.Product;
@@ -14,9 +16,9 @@ public class ProductSpecification {
     };
   }
 
-  public static Specification<Product> hasCategoryId(String categoryId) {
+  public static Specification<Product> hasCategoryId(UUID categoryId) {
     return (root, query, criteriaBuilder) -> {
-      if (categoryId == null || categoryId.trim().isEmpty()) {
+      if (categoryId == null) {
         return criteriaBuilder.conjunction();
       }
       return criteriaBuilder.equal(root.join("category").get("id"), categoryId);
