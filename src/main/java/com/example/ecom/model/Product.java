@@ -59,7 +59,7 @@ public class Product {
   @NotNull(message = "Quantity in stock is required")
   private Integer quantity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "category_id", nullable = true)
   @Schema(description = "Category of the product")
   private Category category;
