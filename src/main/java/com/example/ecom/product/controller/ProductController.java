@@ -77,6 +77,15 @@ public class ProductController {
     return ResponseUtil.success("Product marked as featured successfully", updatedProduct);
   }
 
+  @PatchMapping("/{id}/stock")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Toggle in-stock status of a product (Admins Only)")
+  public Result toggleInStock(
+      @Parameter(description = "ID of the product to toggle in-stock status", required = true) @PathVariable UUID id) {
+    ProductResponseDto updatedProduct = productService.toggleInStock(id);
+    return ResponseUtil.success("Product in-stock status toggled successfully", updatedProduct);
+  }
+
   @PutMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   @Operation(summary = "Update an existing product (Admins Only)")

@@ -96,6 +96,14 @@ public class ProductService implements IProduct {
   }
 
   @Override
+  public ProductResponseDto toggleInStock(UUID id) {
+    Product product = getProductEntityById(id);
+    product.setInStock(!product.getInStock());
+    Product updatedProduct = productRepo.save(product);
+    return productMapper.toDto(updatedProduct);
+  }
+
+  @Override
   public void deleteProduct(UUID id) {
     Product productToDelete = getProductEntityById(id);
     productRepo.delete(productToDelete);

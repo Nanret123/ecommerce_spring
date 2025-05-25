@@ -25,4 +25,6 @@ public interface IProduct {
   Product getProductEntityById(UUID id);
 
   ProductResponseDto markAsFeatured(UUID id, boolean featured);
+
+  ProductResponseDto toggleInStock(UUID id);
 }
