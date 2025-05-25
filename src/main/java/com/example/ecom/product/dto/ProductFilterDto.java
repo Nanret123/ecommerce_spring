@@ -37,4 +37,7 @@ public class ProductFilterDto {
 
   @Parameter(description = "Filter by in stock (true or false)")
   private Boolean inStock;
+
+   @Parameter(description = "Filter by featured(true or false)")
+  private Boolean isFeatured;
 }
