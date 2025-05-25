@@ -9,6 +9,7 @@ import com.example.ecom.model.Product;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ProductMapper {
+  @Mapping(source = "category.name", target = "categoryName")
   ProductResponseDto toDto(Product product);
 
   @Mapping(target = "category", ignore = true) 
