@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,15 +25,16 @@ import com.example.ecom.utils.ResponseUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/public/products")
+@RequestMapping("/api/products")
 @RequiredArgsConstructor
 @Tag(name = "Product", description = "Product management APIs")
-//@SecurityRequirement(name = "apiBearerAuth")
+@SecurityRequirement(name = "apiBearerAuth")
 public class ProductController {
 
   private final ProductService productService;
@@ -55,7 +57,8 @@ public class ProductController {
   }
 
   @PostMapping
-  @Operation(summary = "Create a new product")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Create a new product (Admins Only)")
   public Result createProduct(
       @Parameter(description = "Product details", required = true) @Valid @RequestBody CreateProductDto productDto) {
     ProductResponseDto createdProduct = productService.createProduct(productDto);
@@ -63,7 +66,8 @@ public class ProductController {
   }
 
   @PutMapping("/{id}")
-  @Operation(summary = "Update an existing product")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Update an existing product (Admins Only)")
   public Result updateProduct(
       @Parameter(description = "ID of the product to update", required = true) @PathVariable UUID id,
       @Parameter(description = "Updated product details", required = true) @RequestBody @Valid UpdateProductDTO productDto) {
@@ -72,7 +76,8 @@ public class ProductController {
   }
 
   @DeleteMapping("/{id}")
-  @Operation(summary = "Delete a product by ID")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Delete a product by ID (Admins Only)")
   public Result deleteProduct(
       @Parameter(description = "ID of the product to delete", required = true) @PathVariable UUID id) {
     productService.deleteProduct(id);
