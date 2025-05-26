@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.example.ecom.model.Category;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +20,7 @@ public class ProductResponseDto {
     @Schema(description = "Name of the Product", example = "Premium Headphones")
     private String name;
 
-     @Schema(description = "Category information")
+    @Schema(description = "Category information")
     private String categoryName;
 
     @Schema(description = "Price of the Product", example = "199.99")
@@ -34,20 +32,22 @@ public class ProductResponseDto {
     @Schema(description = "Main image URL of the Product", example = "https://example.com/images/headphones.jpg")
     private String imageUrl;
 
-     @Schema(description = "Whether the product is featured", example = "false")
+    @Schema(description = "Product quantity in stock", example = "50")
+    private Integer quantity;
+
+    @Schema(description = "Whether the product is featured", example = "false")
     private Boolean isFeatured;
-    
+
     @Schema(description = "Whether the product is in stock", example = "true")
     private Boolean inStock;
-    
+
     @Schema(description = "Product SKU", example = "IPH-13-128-BLK")
     private String sku;
-    
+
     @Schema(description = "Creation timestamp")
     private LocalDateTime createdAt;
-    
+
     @Schema(description = "Last update timestamp")
     private LocalDateTime updatedAt;
 
-    
 }

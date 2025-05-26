@@ -86,6 +86,36 @@ public class ProductController {
     return ResponseUtil.success("Product in-stock status toggled successfully", updatedProduct);
   }
 
+  @PatchMapping("/{id}/quantity")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Update stock quantity of a product (Admins Only)")
+  public Result updateStockQuantity(
+      @Parameter(description = "ID of the product to update stock quantity", required = true) @PathVariable UUID id,
+      @Parameter(description = "New stock quantity", required = true) @RequestParam Integer quantity) {
+    ProductResponseDto updatedProduct = productService.updateStockQuantity(id, quantity);
+    return ResponseUtil.success("Product stock quantity updated successfully", updatedProduct);
+  }
+
+  @PatchMapping("/{id}/quantity/add")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Add quantity to a product's stock (Admins Only)")
+  public Result addQuantity(
+      @Parameter(description = "ID of the product to add quantity", required = true) @PathVariable UUID id,
+      @Parameter(description = "Quantity to add", required = true) @RequestParam Integer quantity) {
+    ProductResponseDto updatedProduct = productService.addQuantity(id, quantity);
+    return ResponseUtil.success("Product quantity added successfully", updatedProduct);
+  }
+
+  @PatchMapping("/{id}/quantity/reduce")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Reduce quantity from a product's stock (Admins Only)")
+  public Result reduceQuantity(
+      @Parameter(description = "ID of the product to reduce quantity", required = true) @PathVariable UUID id,
+      @Parameter(description = "Quantity to reduce", required = true) @RequestParam Integer quantity) {
+    ProductResponseDto updatedProduct = productService.reduceQuantity(id, quantity);
+    return ResponseUtil.success("Product quantity reduced successfully", updatedProduct);
+  }
+
   @PutMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   @Operation(summary = "Update an existing product (Admins Only)")

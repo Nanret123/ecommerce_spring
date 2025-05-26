@@ -110,6 +110,42 @@ public class ProductService implements IProduct {
   }
 
   @Override
+  public ProductResponseDto updateStockQuantity(UUID id, Integer quantity) {
+    Product product = getProductEntityById(id);
+    if (quantity < 0) {
+      throw new IllegalArgumentException("Quantity cannot be negative");
+    }
+    product.setQuantity(quantity);
+    Product updatedProduct = productRepo.save(product);
+    return productMapper.toDto(updatedProduct);
+  }
+
+  @Override
+  public ProductResponseDto addQuantity(UUID id, Integer quantity) {
+    Product product = getProductEntityById(id);
+    if (quantity < 0) {
+      throw new IllegalArgumentException("Quantity cannot be negative");
+    }
+    product.setQuantity(product.getQuantity() + quantity);
+    Product updatedProduct = productRepo.save(product);
+    return productMapper.toDto(updatedProduct);
+  }
+
+  @Override
+  public ProductResponseDto reduceQuantity(UUID id, Integer quantity) {
+    Product product = getProductEntityById(id);
+    if (quantity < 0) {
+      throw new IllegalArgumentException("Quantity cannot be negative");
+    }
+    if (product.getQuantity() < quantity) {
+      throw new IllegalArgumentException("Insufficient stock to reduce by " + quantity);
+    }
+    product.setQuantity(product.getQuantity() - quantity);
+    Product updatedProduct = productRepo.save(product);
+    return productMapper.toDto(updatedProduct);
+  }
+
+  @Override
   public Product getProductEntityById(UUID id) {
     return productRepo.findById(id)
         .orElseThrow(() -> new RuntimeException("Product Not Found"));
@@ -121,6 +157,7 @@ public class ProductService implements IProduct {
         product.getName(),
         product.getCategory().getName(),
         product.getPrice(),
+        product.getQuantity(),
         product.getDescription(),
         product.getImageUrl(),
         product.getIsFeatured(),

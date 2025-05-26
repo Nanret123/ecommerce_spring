@@ -27,4 +27,10 @@ public interface IProduct {
   ProductResponseDto markAsFeatured(UUID id, boolean featured);
 
   ProductResponseDto toggleInStock(UUID id);
+
+  ProductResponseDto updateStockQuantity(UUID id, Integer quantity);
+
+  ProductResponseDto addQuantity(UUID id, Integer quantity);
+
+  ProductResponseDto reduceQuantity(UUID id, Integer quantity);
 }
