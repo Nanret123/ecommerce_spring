@@ -37,7 +37,7 @@ public class CartItem {
 
   private BigDecimal price;
 
-  public BigDecimal getTotalPrice() {
+  public BigDecimal getSubTotal() {
     return price.multiply(BigDecimal.valueOf(quantity));
   }
 }
