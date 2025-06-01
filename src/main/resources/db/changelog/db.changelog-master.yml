@@ -19,3 +19,7 @@ databaseChangeLog:
         file: "db/changelog/update-product-table.yml"
   - include:
         file: "db/changelog/remove-unique-constraint-product.yml"
+  - include:
+        file: "db/changelog/add-cart.yml"
+  - include:
+        file: "db/changelog/add-id_generation.yml"

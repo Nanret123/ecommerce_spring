@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-default-uuid-to-carts-id
+      author: ecommerce
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: carts
+            columnName: id
+      changes:
+        - addDefaultValue:
+            tableName: carts
+            columnName: id
+            defaultValueComputed: gen_random_uuid()
+  - changeSet:
+      id: add-default-uuid-to-cart_item-id
+      author: ecommerce
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: cart_items
+            columnName: id
+      changes:
+        - addDefaultValue:
+            tableName: cart_items
+            columnName: id
+            defaultValueComputed: gen_random_uuid()
