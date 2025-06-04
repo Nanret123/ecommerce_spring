@@ -23,3 +23,5 @@ databaseChangeLog:
         file: "db/changelog/add-cart.yml"
   - include:
         file: "db/changelog/add-id_generation.yml"
+  - include:
+        file: "db/changelog/add-order.yml"
