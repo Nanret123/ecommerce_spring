@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,9 @@ public class OrderController {
   private final OrderService orderService;
 
   @PostMapping
-  public Result createOrder(@Valid @RequestBody CreateOrderRequest request) {
+  @Operation(summary = "Create a new order")
+  public Result createOrder(
+      @Parameter(description = "Order details", required = true) @Valid @RequestBody CreateOrderRequest request) {
     OrderDTO order = orderService.createOrder(request);
     return ResponseUtil.success("Order created successfully", order);
   }
@@ -48,34 +51,43 @@ public class OrderController {
   }
 
   @GetMapping("/user/{userId}")
-  public Result getOrdersByUserId(@PathVariable UUID userId) {
+  @Operation(summary = "Get user orders")
+  public Result getOrdersByUserId(
+      @Parameter(description = "The userId used to retrieve the orders", required = true) @PathVariable UUID userId) {
     List<OrderDTO> orders = orderService.getUserOrders(userId);
     return ResponseUtil.success("Order list retrieved successfully", orders);
   }
 
   @GetMapping("/user/{userId}/count")
-  public Result getUserOrderCount(@PathVariable UUID userId) {
+  @Operation(summary = "Count the number of user orders")
+  public Result getUserOrderCount(
+      @Parameter(description = "The userId used to retrieve the order count", required = true) @PathVariable UUID userId) {
     Long count = orderService.getUserOrderCount(userId);
     return ResponseUtil.success("User order count gotten successfully", count);
   }
 
   @PutMapping("/{id}/status")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Update the status of the order (Admin Only)")
   public Result updateOrderStatus(
-      @PathVariable UUID id,
+      @Parameter(description = "ID of the order to update", required = true) @PathVariable UUID id,
       @Valid @RequestBody UpdateOrderStatusRequest request) {
     OrderDTO order = orderService.updateOrderStatus(id, request);
     return ResponseUtil.success("User status updated successfully", order);
   }
 
   @GetMapping("/{id}")
+  @Operation(summary = "Get order by ID")
   public Result getOrderById(
-      @Parameter(description = "ID of the  to retrieve", required = true) @PathVariable UUID id) {
+      @Parameter(description = "ID of the order to retrieve", required = true) @PathVariable UUID id) {
     OrderDTO order = orderService.getOrderById(id);
     return ResponseUtil.success("Order retrieved successfully", order);
   }
 
   @PutMapping("/{id}/cancel")
-  public Result cancelOrder(@PathVariable UUID id) {
+  @Operation(summary = "Cancel Order")
+  public Result cancelOrder(
+      @Parameter(description = "ID of the order to cancel", required = true) @PathVariable UUID id) {
     orderService.cancelOrder(id);
     return ResponseUtil.success("Order cancelled successfully", null);
   }
