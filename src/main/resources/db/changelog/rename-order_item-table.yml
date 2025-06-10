@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: "003-rename-order_item-to-order_items"
+      author: "ecommerce"
+      changes:
+        - renameTable:
+            oldTableName: order_item
+            newTableName: order_items

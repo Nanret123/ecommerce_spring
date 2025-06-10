@@ -25,3 +25,5 @@ databaseChangeLog:
         file: "db/changelog/add-id_generation.yml"
   - include:
         file: "db/changelog/add-order.yml"
+  - include:
+        file: "db/changelog/rename-order_item-table.yml"
