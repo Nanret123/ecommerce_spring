@@ -9,6 +9,8 @@ import com.example.ecom.model.OrderItem;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
+
+  @Mapping(source = "userId", target = "userId")
   OrderDTO toDTO(Order order);
 
   Order toEntity(OrderDTO orderDTO);

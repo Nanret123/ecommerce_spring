@@ -20,6 +20,7 @@ import com.example.ecom.enums.OrderStatus;
 import com.example.ecom.model.Cart;
 import com.example.ecom.model.Order;
 import com.example.ecom.model.OrderItem;
+import com.example.ecom.model.User;
 import com.example.ecom.order.dtos.CreateOrderRequest;
 import com.example.ecom.order.dtos.OrderDTO;
 import com.example.ecom.order.dtos.OrderFilterDTO;
@@ -27,7 +28,9 @@ import com.example.ecom.order.dtos.OrderMapper;
 import com.example.ecom.order.dtos.UpdateOrderStatusRequest;
 import com.example.ecom.repository.CartRepository;
 import com.example.ecom.repository.OrderRepository;
+import com.example.ecom.repository.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,13 +40,15 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class OrderService {
   private final OrderRepository orderRepo;
+  private final UserRepository userRepo;
   private final OrderMapper orderMapper;
   private final CartRepository cartRepo;
   private final CartService cartService;
 
-  public OrderDTO createOrder(CreateOrderRequest request) {
+  public OrderDTO createOrder(CreateOrderRequest request, UUID userId) {
+    log.info("Creating order for user: {}", userId);
     // get cart and its items
-    Cart cart = cartRepo.findByUserIdWithItems(request.getUserId())
+    Cart cart = cartRepo.findByUserIdWithItems(userId)
         .orElse(null);
 
     if (cart.getCartItems().isEmpty()) {
@@ -55,10 +60,13 @@ public class OrderService {
         .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+    User user = userRepo.findById(userId)
+        .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
     // Create order
     Order order = new Order();
     order.setOrderNumber(generateOrderNumber());
-    order.setUserId(request.getUserId());
+    order.setUser(user);
     order.setTotalAmount(totalAmount);
     order.setStatus(OrderStatus.PENDING);
     order.setShippingAddress(request.getShippingAddress());
@@ -80,8 +88,9 @@ public class OrderService {
     order.setOrderItems(orderItems);
 
     Order savedOrder = orderRepo.save(order);
+    savedOrder.setUserId(user.getId()); 
 
-    cartService.clearCart(request.getUserId());
+    cartService.clearCart(userId);
 
     return orderMapper.toDTO(savedOrder);
   }
