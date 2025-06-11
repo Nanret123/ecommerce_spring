@@ -9,7 +9,7 @@ import com.example.ecom.review.dtos.ReviewDto;
 import com.example.ecom.review.dtos.UpdateReviewDto;
 
 public interface IReview {
-  ReviewDto createReview(CreateReviewDto createReviewDto, UUID userId);
+  ReviewDto createReview(CreateReviewDto createReviewDto);
 
   ReviewDto getReviewById(UUID reviewId);
 

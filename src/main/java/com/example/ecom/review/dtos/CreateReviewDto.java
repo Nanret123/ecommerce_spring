@@ -20,6 +20,10 @@ public class CreateReviewDto {
   @Schema(description = "ID of the product being reviewed", example = "123e4567-e89b-12d3-a456-426614174000")
   private UUID productId;
 
+  @NotNull(message = "User ID is required")
+  @Schema(description = "ID of the user submitting the review", example = "123e4567-e89b-12d3-a456-426614174000")
+  private UUID userId;
+
   @NotNull(message = "Reviewer name is required")
   @Schema(description = "Name of the reviewer", example = "John Doe")
   private String reviewerName;

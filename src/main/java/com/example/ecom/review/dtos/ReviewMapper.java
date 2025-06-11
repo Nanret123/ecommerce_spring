@@ -18,6 +18,7 @@ public interface ReviewMapper {
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "productId", ignore = true)
+    @Mapping(target = "userId", ignore = true)
     @Mapping(target = "reviewerName", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

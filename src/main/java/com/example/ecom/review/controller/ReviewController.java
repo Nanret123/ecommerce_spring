@@ -2,7 +2,6 @@ package com.example.ecom.review.controller;
 
 import java.util.UUID;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +16,6 @@ import com.example.ecom.review.dtos.CreateReviewDto;
 import com.example.ecom.review.dtos.ReviewDto;
 import com.example.ecom.review.dtos.UpdateReviewDto;
 import com.example.ecom.review.service.ReviewService;
-import com.example.ecom.security.services.UserDetailsImpl;
 import com.example.ecom.utils.ResponseUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,10 +34,8 @@ public class ReviewController {
   @PostMapping
   @Operation(summary = "Add a review to a product")
   public Result createReview(
-      @Parameter(description = "Review details", required = true) @Valid @RequestBody CreateReviewDto reviewDto,
-      @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    UUID userId = userDetails.getId();
-    ReviewDto createdReview = service.createReview(reviewDto, userId);
+      @Parameter(description = "Review details", required = true) @Valid @RequestBody CreateReviewDto reviewDto) {
+    ReviewDto createdReview = service.createReview(reviewDto);
     return ResponseUtil.success("Review created successfully", createdReview);
   }
 

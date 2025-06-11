@@ -31,6 +31,9 @@ public class Review {
   @Column(name = "product_id", nullable = false)
   private UUID productId;
 
+   @Column(name = "user_id", nullable = false)
+  private UUID userId;
+
   @Column(name = "reviewer_name",nullable = false, length = 100)
   private String reviewerName;
 

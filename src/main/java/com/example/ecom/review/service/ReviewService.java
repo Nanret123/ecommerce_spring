@@ -26,9 +26,9 @@ public class ReviewService implements IReview {
   private final ReviewMapper reviewMapper;
 
   @Override
-  public ReviewDto createReview(CreateReviewDto createReviewDto, UUID userId) {
+  public ReviewDto createReview(CreateReviewDto createReviewDto) {
     // check if user has reviewed the product
-    if (hasUserReviewedProduct(createReviewDto.getProductId(), userId)) {
+    if (hasUserReviewedProduct(createReviewDto.getProductId(), createReviewDto.getUserId())) {
       throw new IllegalArgumentException("User has already reviewed this product");
     }
     Review review = reviewMapper.toEntity(createReviewDto);
