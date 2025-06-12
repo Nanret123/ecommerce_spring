@@ -27,3 +27,5 @@ databaseChangeLog:
         file: "db/changelog/add-order.yml"
   - include:
         file: "db/changelog/rename-order_item-table.yml"
+  - include:
+        file: "db/changelog/add-review-table.yml"

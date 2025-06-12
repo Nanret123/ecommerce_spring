@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: Ecommerce Backend
+  jackson:
+    time-zone: Africa/Lagos
   threads:
     virtual:
       enabled: true
