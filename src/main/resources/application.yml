@@ -10,9 +10,9 @@ spring:
     virtual:
       enabled: true
   datasource:
-    url: jdbc:postgresql://localhost:5433/ecommerce
-    username: postgres
-    password: postgres
+    url: ${SPRING_DATABASE_URL}
+    username: ${SPRING_DATABASE_USERNAME}
+    password: ${SPRING_DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       poolName: Hikari
@@ -62,7 +62,7 @@ logging:
       
 security:
     jwt:
-      secret: my-super-secure-jwt-secret-key-123!
+      secret: ${JWT_SECRET}
       expiration: 86400000    # 1 day
       token-prefix: Bearer
       header-string: Authorization

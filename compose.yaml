@@ -1,16 +1,30 @@
-version: '3.8' 
-
 services:
   postgres:
-    image: postgres:latest
-    ports:
-      - '5433:5432'
+    image: postgres:15
+    container_name: ecommerce_postgres
     environment:
-      POSTGRES_USER: postgres
       POSTGRES_DB: ecommerce
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+
+  ecommerce-app:
+    build: .
+    container_name: ecommerce
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ecommerce
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
 volumes:
-  postgres-data:
+  postgres_data:
