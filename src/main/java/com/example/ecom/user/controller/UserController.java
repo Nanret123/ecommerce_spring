@@ -1,5 +1,6 @@
 package com.example.ecom.user.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ecom.auth.dto.UserDto;
 import com.example.ecom.auth.payload.response.Result;
 import com.example.ecom.user.dto.UpdateProfileDTO;
 import com.example.ecom.user.dto.UserUpdateDTO;
 import com.example.ecom.user.service.UserService;
-import com.example.ecom.utils.ResponseUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -35,41 +36,41 @@ public class UserController {
   @GetMapping()
   @Operation(summary = "Get all users (Admins Only)", description = "Retrieves a list of all registered users")
   @PreAuthorize("hasRole('ADMIN')")
-  public Result getAllUsers() {
-    return ResponseUtil.success("User list retrieved successfully", userService.getAllUsers());
+  public Result<List<UserDto>> getAllUsers() {
+    return Result.success("User list retrieved successfully", userService.getAllUsers());
   }
 
   @GetMapping("/{id}")
   @Operation(summary = "Get user by ID (Admins Only)", description = "Retrieves user details by user ID")
   @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #id")
-  public Result getUserById(@PathVariable UUID id) {
-    return ResponseUtil.success("User retrieved successfully", userService.getUserById(id));
+  public Result<UserDto> getUserById(@PathVariable UUID id) {
+    return Result.success("User retrieved successfully", userService.getUserById(id));
   }
 
   @GetMapping("/me")
   @Operation(summary = "Get current user", description = "Retrieves the details of the currently authenticated user")
-  public Result getCurrentUser() {
-    return ResponseUtil.success("Current user retrieved successfully", userService.getCurrentUser());
+  public Result<UserDto> getCurrentUser() {
+    return Result.success("Current user retrieved successfully", userService.getCurrentUser());
   }
 
   @PutMapping("/me")
   @Operation(summary = "Update current user profile", description = "Update the currently authenticated user's profile")
-  public Result updateCurrentUserProfile(@Valid @RequestBody UpdateProfileDTO userDto) {
-    return ResponseUtil.success("User profile updated successfully", userService.updateProfile(userDto));
+  public Result<UserDto> updateCurrentUserProfile(@Valid @RequestBody UpdateProfileDTO userDto) {
+    return Result.success("User profile updated successfully", userService.updateProfile(userDto));
   }
 
   @PutMapping("/{id}")
   @Operation(summary = "Update user by ID (Admins Only)", description = "Update user details by user ID")
   @PreAuthorize("hasRole('ADMIN')")
-  public Result updateUserById(@PathVariable UUID id, @Valid @RequestBody UserUpdateDTO userDto) {
-    return ResponseUtil.success("User updated successfully", userService.updateUser(id, userDto));
+  public Result<UserDto> updateUserById(@PathVariable UUID id, @Valid @RequestBody UserUpdateDTO userDto) {
+    return Result.success("User updated successfully", userService.updateUser(id, userDto));
   }
 
   @Operation(summary = "Delete user by ID (Admins Only)", description = "Delete a user by their ID")
   @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #id")
   @DeleteMapping("/{id}")
-  public Result deleteUser(@PathVariable UUID id) {
+  public Result<Void> deleteUser(@PathVariable UUID id) {
     userService.deleteUser(id);
-    return ResponseUtil.success("User deleted successfully", null);
+    return Result.success("User deleted successfully", null);
   }
 }

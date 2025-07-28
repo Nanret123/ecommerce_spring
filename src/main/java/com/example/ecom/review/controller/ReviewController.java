@@ -1,5 +1,6 @@
 package com.example.ecom.review.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +17,6 @@ import com.example.ecom.review.dtos.CreateReviewDto;
 import com.example.ecom.review.dtos.ReviewDto;
 import com.example.ecom.review.dtos.UpdateReviewDto;
 import com.example.ecom.review.service.ReviewService;
-import com.example.ecom.utils.ResponseUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,42 +33,42 @@ public class ReviewController {
 
   @PostMapping
   @Operation(summary = "Add a review to a product")
-  public Result createReview(
+  public Result<ReviewDto> createReview(
       @Parameter(description = "Review details", required = true) @Valid @RequestBody CreateReviewDto reviewDto) {
     ReviewDto createdReview = service.createReview(reviewDto);
-    return ResponseUtil.success("Review created successfully", createdReview);
+    return Result.success("Review created successfully", createdReview);
   }
 
   @Operation(summary = "Get all reviews for a product")
   @GetMapping("/product/{productId}")
-  public Result getProductReviews(
+  public Result<List<ReviewDto>> getProductReviews(
     @Parameter(description = "ID of the product to get reviews", required = true)
       @PathVariable UUID productId) {
-    return ResponseUtil.success("Reviews gotten successfully", service.getReviewsByProductId(productId));
+    return Result.success("Reviews gotten successfully", service.getReviewsByProductId(productId));
   }
 
   @Operation(summary = "Get one review")
   @GetMapping("/{reviewId}")
-  public Result getOneReviews(
+  public Result<ReviewDto> getOneReviews(
     @Parameter(description = "ID of the review to get", required = true)
       @PathVariable UUID reviewId) {
-    return ResponseUtil.success("Review gotten successfully", service.getReviewById(reviewId));
+    return Result.success("Review gotten successfully", service.getReviewById(reviewId));
   }
 
   @Operation(summary = "Update a review")
   @PutMapping("/{reviewId}")
-  public Result updateReview(
+  public Result<ReviewDto> updateReview(
       @Parameter(description = "ID of the review to update", required = true) @PathVariable UUID reviewId,
       @Parameter(description = "Updated review details", required = true) @Valid @RequestBody UpdateReviewDto updateReviewDto) {
-    return ResponseUtil.success("Review updated successfully", service.updateReview(reviewId, updateReviewDto));
+    return Result.success("Review updated successfully", service.updateReview(reviewId, updateReviewDto));
   }
 
   @Operation(summary = "Delete a review")
   @DeleteMapping("/{reviewId}")
-  public Result deleteReview(
+  public Result<Void> deleteReview(
       @Parameter(description = "ID of the review to delete", required = true) @PathVariable UUID reviewId) {
      service.deleteReview(reviewId);
-    return ResponseUtil.success("Review deleted successfully", null);
+    return Result.success("Review deleted successfully", null);
   }
 
 }

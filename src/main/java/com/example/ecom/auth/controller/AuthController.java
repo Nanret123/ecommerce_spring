@@ -16,7 +16,6 @@ import com.example.ecom.auth.payload.request.SignUpRequest;
 import com.example.ecom.auth.payload.response.Result;
 import com.example.ecom.auth.service.AuthService;
 import com.example.ecom.auth.service.RefreshTokenService;
-import com.example.ecom.utils.ResponseUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,9 +55,9 @@ public class AuthController {
       @ApiResponse(responseCode = "409", description = "Username/email already exists")
     })
   @PostMapping("/signup")
-  public Result registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+  public Result<UserDto> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
     UserDto user = authService.registerUser(signUpRequest);
-    return ResponseUtil.success("User registered successfully", user);
+    return Result.success("User registered successfully", user);
   }
 
   @Operation(
@@ -75,9 +74,9 @@ public class AuthController {
       @ApiResponse(responseCode = "404", description = "User not found")
     })
   @PostMapping("/signin")
-  public Result loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+  public Result<JwtResponseDto> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
     JwtResponseDto response = authService.authenticateUser(loginRequest);
-    return ResponseUtil.success("User logged in successfully", response);
+    return Result.success("User logged in successfully", response);
   }
 
   @Operation(
@@ -94,9 +93,9 @@ public class AuthController {
       @ApiResponse(responseCode = "403", description = "Refresh token expired")
     })
   @PostMapping("/refreshToken")
-  public Result refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+  public Result<RefreshTokenResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
      RefreshTokenResponse response = tokenService.handleRefreshToken(request.getRefreshToken());
-     return ResponseUtil.success("Refresh token created successfully", response);
+     return Result.success("Refresh token created successfully", response);
   }
 
   @Operation(
@@ -113,9 +112,9 @@ public class AuthController {
       @ApiResponse(responseCode = "401", description = "Not authenticated")
     })
   @PostMapping("/signout")
-  public Result sigout(){
+  public Result<Void> sigout(){
      authService.logoutUser();
-    return ResponseUtil.success("User logged out successfully", null);
+    return Result.success("User logged out successfully", null);
   }
 
   @PostMapping("/forgot-password")
@@ -123,9 +122,9 @@ public class AuthController {
     summary = "Forgot password",
     description = "Sends a password reset token to the user's email"
     )
-  public Result forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+  public Result<Void> forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO) {
     authService.forgotPassword(forgotPasswordDTO);
-    return ResponseUtil.success("Password reset token sent successfully", null);
+    return Result.success("Password reset token sent successfully", null);
   }
 
   @PostMapping("/reset-password")
@@ -133,10 +132,8 @@ public class AuthController {
     summary = "Reset password",
     description = "Resets the user's password using the provided token"
     )
-  public Result resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO) {
+  public Result<Void> resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO) {
     authService.resetPassword(resetPasswordDTO);
-    return ResponseUtil.success("Password reset successfully", null);
-  }
-  
-  
+    return Result.success("Password reset successfully", null);
+  } 
 }

@@ -23,7 +23,6 @@ import com.example.ecom.order.dtos.OrderFilterDTO;
 import com.example.ecom.order.dtos.UpdateOrderStatusRequest;
 import com.example.ecom.order.service.OrderService;
 import com.example.ecom.security.services.UserDetailsImpl;
-import com.example.ecom.utils.ResponseUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,62 +45,62 @@ public class OrderController {
 
   @PostMapping
   @Operation(summary = "Create a new order")
-  public Result createOrder(
+  public Result<OrderDTO> createOrder(
       @Parameter(description = "Order details", required = true) @Valid @RequestBody CreateOrderRequest request,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     UUID userId = userDetails.getId();
     OrderDTO order = orderService.createOrder(request, userId);
-    return ResponseUtil.success("Order created successfully", order);
+    return Result.success("Order created successfully", order);
   }
 
   @GetMapping()
    @PreAuthorize("hasRole('ADMIN')")
   @Operation(summary = "View a paginated list of orders with optional filtering and pagination (Admin Only)")
-  public Result getAllOrders(@Valid @ModelAttribute @ParameterObject OrderFilterDTO orderFilterDto) {
+  public Result<Page<OrderDTO>> getAllOrders(@Valid @ModelAttribute @ParameterObject OrderFilterDTO orderFilterDto) {
     Page<OrderDTO> orders = orderService.getAllOrders(orderFilterDto);
-    return ResponseUtil.success("Order list retrieved successfully", orders);
+    return Result.success("Order list retrieved successfully", orders);
   }
 
   @GetMapping("/user/{userId}")
   @Operation(summary = "Get user orders")
-  public Result getOrdersByUserId(
+  public Result<List<OrderDTO>> getOrdersByUserId(
       @Parameter(description = "The userId used to retrieve the orders", required = true) @PathVariable UUID userId) {
     List<OrderDTO> orders = orderService.getUserOrders(userId);
-    return ResponseUtil.success("Order list retrieved successfully", orders);
+    return Result.success("Order list retrieved successfully", orders);
   }
 
   @GetMapping("/user/{userId}/count")
   @Operation(summary = "Count the number of user orders")
-  public Result getUserOrderCount(
+  public Result<Long> getUserOrderCount(
       @Parameter(description = "The userId used to retrieve the order count", required = true) @PathVariable UUID userId) {
     Long count = orderService.getUserOrderCount(userId);
-    return ResponseUtil.success("User order count gotten successfully", count);
+    return Result.success("User order count gotten successfully", count);
   }
 
   @PutMapping("/{id}/status")
   @PreAuthorize("hasRole('ADMIN')")
   @Operation(summary = "Update the status of the order (Admin Only)")
-  public Result updateOrderStatus(
+  public Result<OrderDTO> updateOrderStatus(
       @Parameter(description = "ID of the order to update", required = true) @PathVariable UUID id,
       @Valid @RequestBody UpdateOrderStatusRequest request) {
     OrderDTO order = orderService.updateOrderStatus(id, request);
-    return ResponseUtil.success("Order status updated successfully", order);
+    return Result.success("Order status updated successfully", order);
   }
 
   @GetMapping("/{id}")
   @Operation(summary = "Get order by ID")
-  public Result getOrderById(
+  public Result<OrderDTO> getOrderById(
       @Parameter(description = "ID of the order to retrieve", required = true) @PathVariable UUID id) {
     OrderDTO order = orderService.getOrderById(id);
-    return ResponseUtil.success("Order retrieved successfully", order);
+    return Result.success("Order retrieved successfully", order);
   }
 
   @PutMapping("/{id}/cancel")
   @Operation(summary = "Cancel Order")
-  public Result cancelOrder(
+  public Result<Void> cancelOrder(
       @Parameter(description = "ID of the order to cancel", required = true) @PathVariable UUID id) {
     orderService.cancelOrder(id);
-    return ResponseUtil.success("Order cancelled successfully", null);
+    return Result.success("Order cancelled successfully", null);
   }
 
 }
