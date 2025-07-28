@@ -48,6 +48,6 @@ cd ecommerce_spring
 ## 📖 API Documentation
 Once the app is running, open your browser and visit:
 
-**http://localhost:8080/swagger-ui.html**
+**https://ecommerce-spring-i3hj.onrender.com/swagger-ui.html**
 
 to explore and test available endpoints via Swagger UI.
